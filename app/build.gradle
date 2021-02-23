@@ -14,6 +14,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -36,4 +41,5 @@ dependencies {
     implementation 'com.github.kellinwood.zip-signer:zipsigner-lib:2bb3b69ff3'
     implementation 'com.github.kellinwood.zip-signer:zipsigner-lib-optional:2bb3b69ff3'
     implementation 'com.github.kellinwood.zip-signer:android-sun-jarsign-support:2bb3b69ff3'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
 }

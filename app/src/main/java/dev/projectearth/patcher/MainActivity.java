@@ -9,10 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -20,25 +18,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.io.BufferedWriter;
+import org.eclipse.jgit.api.ApplyCommand;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.PatchApplyException;
+import org.eclipse.jgit.api.errors.PatchFormatException;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.patch.Patch;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
-import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
@@ -185,6 +183,17 @@ public class MainActivity extends AppCompatActivity {
                                     raf.seek(0x0514D05D);
                                     raf.write(finalUrl.getBytes());
                                 } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                try {
+                                    Git git = Git.init().setDirectory(outDir.toFile()).call();
+                                    git.apply().setPatch(getResources().openRawResource(R.raw.patch_signature)).call();
+                                } catch (PatchFormatException e) {
+                                    e.printStackTrace();
+                                } catch (PatchApplyException e) {
+                                    e.printStackTrace();
+                                } catch (GitAPIException e) {
                                     e.printStackTrace();
                                 }
                             }
