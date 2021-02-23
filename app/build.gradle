@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -24,6 +25,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                def newName = outputFileName
+
+                newName = newName.replace("app-", "${variant.mergedFlavor.applicationId}-")
+                newName = newName.replace("-release", "-${variant.versionName}")
+                newName = newName.replace("-debug", "-${variant.versionName}-debug")
+
+                outputFileName = newName
+            }
+        }
     }
 }
 
@@ -34,6 +47,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    
+    implementation 'com.google.firebase:firebase-analytics:18.0.2'
 
     implementation 'com.github.rtm516:Apktool:1b9a79fee0'
     implementation 'ro.andob.androidawt:androidawt:1.0.4'

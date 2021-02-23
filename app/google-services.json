@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "340772021308",
+    "project_id": "project-earth-6a7dd",
+    "storage_bucket": "project-earth-6a7dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340772021308:android:79aef38463ce9fb3290f39",
+        "android_client_info": {
+          "package_name": "dev.projectearth.patcher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340772021308-akt0uh501j1muh1shvpkiv5mbsarvgci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwPZiyjP2l1sgXMjXuDuUbZF9_xjCsydg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340772021308-akt0uh501j1muh1shvpkiv5mbsarvgci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
