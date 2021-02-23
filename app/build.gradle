@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "dev.projectearth.patcher"
+        minSdkVersion 26
+        targetSdkVersion 28 // Cant be 29 because that breaks aapt from being runnable
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'com.github.rtm516:Apktool:1b9a79fee0'
+    implementation 'ro.andob.androidawt:androidawt:1.0.4'
+    implementation 'org.bouncycastle:bcpkix-jdk15on:1.56'
+    implementation 'com.github.kellinwood.zip-signer:zipsigner-lib:2bb3b69ff3'
+    implementation 'com.github.kellinwood.zip-signer:zipsigner-lib-optional:2bb3b69ff3'
+    implementation 'com.github.kellinwood.zip-signer:android-sun-jarsign-support:2bb3b69ff3'
+}
