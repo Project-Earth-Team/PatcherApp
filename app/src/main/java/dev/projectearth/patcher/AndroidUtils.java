@@ -5,16 +5,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.InputStreamReader;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class AndroidUtils {
+
+    private static final OkHttpClient HTTP_CLIENT;
+
+    static {
+        HTTP_CLIENT = new OkHttpClient.Builder().followRedirects(true).build();
+    }
+
     /**
      * Open the default browser at a given URL
      *
@@ -57,21 +67,13 @@ public class AndroidUtils {
      * @param outputFile Location to download to
      */
     public static void downloadFile(String url, File outputFile) {
-        try {
-            URL u = new URL(url);
-            URLConnection conn = u.openConnection();
-            int contentLength = conn.getContentLength();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
 
-            DataInputStream stream = new DataInputStream(u.openStream());
-
-            byte[] buffer = new byte[contentLength];
-            stream.readFully(buffer);
-            stream.close();
-
-            DataOutputStream fos = new DataOutputStream(new FileOutputStream(outputFile));
-            fos.write(buffer);
-            fos.flush();
-            fos.close();
+        try (Response response = HTTP_CLIENT.newCall(request).execute();
+             FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(response.body().bytes());
         } catch(IOException e) {
             return; // swallow a 404
         }

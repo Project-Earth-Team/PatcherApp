@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final Path patchDir = getApplicationContext().getExternalCacheDir().toPath().resolve("patches");
-        patchDir.toFile().mkdir();
         final Path outDir = getApplicationContext().getExternalCacheDir().toPath().resolve("com.mojang.minecraftearth");
         final File outFile = getApplicationContext().getExternalCacheDir().toPath().resolve("dev.projectearth.prod.unsigned.apk").toFile();
         final File outFileSigned = getApplicationContext().getExternalFilesDir("").toPath().resolve("dev.projectearth.prod.apk").toFile();
@@ -123,6 +122,16 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         File zipFile = patchDir.resolve("patches.zip").toFile();
+
+                        // Empty the dir
+                        if (patchDir.toFile().exists()) {
+                            for (final String file :  patchDir.toFile().list()) {
+                                patchDir.resolve(file).toFile().delete();
+                            }
+                        } else {
+                            patchDir.toFile().mkdir();
+                        }
+
                         // Always download the latest patches
                         AndroidUtils.downloadFile("https://github.com/Project-Earth-Team/Patches/archive/main.zip", zipFile);
 
@@ -132,8 +141,11 @@ public class MainActivity extends AppCompatActivity {
                                 if (!entry.getName().endsWith(".patch")) {
                                     continue;
                                 }
+                                Path fileName = Paths.get(entry.getName()).getFileName();
 
-                                FileOutputStream fOut = new FileOutputStream(patchDir.resolve(Paths.get(entry.getName()).getFileName()).toString());
+                                Log.d(TAG, "Found patch: " + fileName);
+
+                                FileOutputStream fOut = new FileOutputStream(patchDir.resolve(fileName).toString());
 
                                 byte[] buffer = new byte[8192];
                                 int len;
