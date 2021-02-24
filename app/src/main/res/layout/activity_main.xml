@@ -7,6 +7,17 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/btnDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Download"
+        app:layout_constraintBottom_toTopOf="@+id/btnDecompile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/btnDecompile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

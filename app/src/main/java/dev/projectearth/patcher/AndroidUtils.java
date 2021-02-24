@@ -5,6 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+
 public class AndroidUtils {
     /**
      * Open the default browser at a given URL
@@ -38,5 +47,33 @@ public class AndroidUtils {
     public static void showToast(Context ctx, String message, int length) {
         Toast toast = Toast.makeText(ctx, message, length);
         toast.show();
+    }
+
+    /**
+     * Download a file to a given location
+     * https://stackoverflow.com/a/1718140/5299903
+     *
+     * @param url Url to download
+     * @param outputFile Location to download to
+     */
+    public static void downloadFile(String url, File outputFile) {
+        try {
+            URL u = new URL(url);
+            URLConnection conn = u.openConnection();
+            int contentLength = conn.getContentLength();
+
+            DataInputStream stream = new DataInputStream(u.openStream());
+
+            byte[] buffer = new byte[contentLength];
+            stream.readFully(buffer);
+            stream.close();
+
+            DataOutputStream fos = new DataOutputStream(new FileOutputStream(outputFile));
+            fos.write(buffer);
+            fos.flush();
+            fos.close();
+        } catch(IOException e) {
+            return; // swallow a 404
+        }
     }
 }

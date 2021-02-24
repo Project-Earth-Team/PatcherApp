@@ -18,27 +18,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.eclipse.jgit.api.ApplyCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.PatchApplyException;
 import org.eclipse.jgit.api.errors.PatchFormatException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.patch.Patch;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import brut.androlib.Androlib;
 import brut.androlib.AndrolibException;
@@ -74,10 +76,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        final Path outDir = getApplicationContext().getExternalFilesDir("").toPath().resolve("com.mojang.minecraftearth");
-        final File outFile = getApplicationContext().getExternalFilesDir("").toPath().resolve("dev.projectearth.prod.unsigned.apk").toFile();
+        final Path patchDir = getApplicationContext().getExternalCacheDir().toPath().resolve("patches");
+        patchDir.toFile().mkdir();
+        final Path outDir = getApplicationContext().getExternalCacheDir().toPath().resolve("com.mojang.minecraftearth");
+        final File outFile = getApplicationContext().getExternalCacheDir().toPath().resolve("dev.projectearth.prod.unsigned.apk").toFile();
         final File outFileSigned = getApplicationContext().getExternalFilesDir("").toPath().resolve("dev.projectearth.prod.apk").toFile();
-        final String frameworkDir = getApplicationContext().getExternalFilesDir("").toPath().resolve("framework").toString();
+        final String frameworkDir = getApplicationContext().getExternalCacheDir().toPath().resolve("framework").toString();
 
         // Extract aapt
         // aapt from https://github.com/JonForShort/android-tools
@@ -110,6 +114,45 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        Button btnDownload = (Button) findViewById(R.id.btnDownload);
+        btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        File zipFile = patchDir.resolve("patches.zip").toFile();
+                        // Always download the latest patches
+                        AndroidUtils.downloadFile("https://github.com/Project-Earth-Team/Patches/archive/main.zip", zipFile);
+
+                        try (ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile))) {
+                            ZipEntry entry;
+                            while ((entry = zip.getNextEntry()) != null) {
+                                if (!entry.getName().endsWith(".patch")) {
+                                    continue;
+                                }
+
+                                FileOutputStream fOut = new FileOutputStream(patchDir.resolve(Paths.get(entry.getName()).getFileName()).toString());
+
+                                byte[] buffer = new byte[8192];
+                                int len;
+                                while ((len = zip.read(buffer)) != -1)
+                                {
+                                    fOut.write(buffer, 0, len);
+                                }
+                                fOut.close();
+
+                                zip.closeEntry();
+                            }
+                            Log.d(TAG, "DONE!");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
 
         Button btnDecompile = (Button) findViewById(R.id.btnDecompile);
         final String finalEarthApk = earthApk;
@@ -186,13 +229,21 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
-                                try {
-                                    Git git = Git.init().setDirectory(outDir.toFile()).call();
-                                    git.apply().setPatch(getResources().openRawResource(R.raw.patch_signature)).call();
-                                } catch (PatchFormatException e) {
-                                    e.printStackTrace();
-                                } catch (PatchApplyException e) {
-                                    e.printStackTrace();
+                                try (Git git = Git.init().setDirectory(outDir.toFile()).call()) {
+                                    for (final File file : patchDir.toFile().listFiles()) {
+                                        try {
+                                            if (!file.getName().endsWith(".patch")) {
+                                                continue;
+                                            }
+
+                                            Log.d(TAG, "Installing: " + file.getName());
+
+                                            git.apply().setPatch(new FileInputStream(file)).call();
+                                        } catch (GitAPIException | FileNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    Log.d(TAG, "DONE!");
                                 } catch (GitAPIException e) {
                                     e.printStackTrace();
                                 }
@@ -250,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
                             zipSigner.setKeys( "earth_test", publicKey, privateKey, "SHA1withRSA", null);
                             zipSigner.signZip(outFile.toString(), outFileSigned.toString());
+                            Log.d(TAG, "DONE!");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
