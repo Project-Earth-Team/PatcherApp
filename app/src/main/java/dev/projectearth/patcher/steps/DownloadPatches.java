@@ -18,6 +18,9 @@ public class DownloadPatches extends LoggedRunnable {
     @SneakyThrows
     @Override
     public void run() {
+        // Sleep to wait for the app to load
+        Thread.sleep(2000);
+
         File zipFile = StorageLocations.getPatchDir().resolve("patches.zip").toFile();
 
         // Empty the dir

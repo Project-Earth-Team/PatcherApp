@@ -1,6 +1,5 @@
 package dev.projectearth.patcher.utils;
 
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
@@ -8,12 +7,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InvalidObjectException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.List;
 
-import dev.projectearth.patcher.MainStepActivity;
+import dev.projectearth.patcher.InstallerStepsActivity;
 import dev.projectearth.patcher.R;
 import lombok.Getter;
 
@@ -36,17 +34,17 @@ public class StorageLocations {
     private static final File earthKeystore;
 
     static {
-        patchDir = MainStepActivity.getAppContext().getExternalCacheDir().toPath().resolve("patches");
-        outDir = MainStepActivity.getAppContext().getExternalCacheDir().toPath().resolve("com.mojang.minecraftearth");
-        outFile = MainStepActivity.getAppContext().getExternalCacheDir().toPath().resolve("dev.projectearth.prod.unsigned.apk").toFile();
-        outFileSigned = MainStepActivity.getAppContext().getExternalFilesDir("").toPath().resolve("dev.projectearth.prod.apk").toFile();
-        frameworkDir = MainStepActivity.getAppContext().getExternalCacheDir().toPath().resolve("framework").toString();
-        aaptExec = MainStepActivity.getAppContext().getFilesDir().toPath().resolve("aapt").toFile();
-        earthKeystore = MainStepActivity.getAppContext().getFilesDir().toPath().resolve("earth_test.jks").toFile();
+        patchDir = InstallerStepsActivity.getAppContext().getExternalCacheDir().toPath().resolve("patches");
+        outDir = InstallerStepsActivity.getAppContext().getExternalCacheDir().toPath().resolve("com.mojang.minecraftearth");
+        outFile = InstallerStepsActivity.getAppContext().getExternalCacheDir().toPath().resolve("dev.projectearth.prod.unsigned.apk").toFile();
+        outFileSigned = InstallerStepsActivity.getAppContext().getExternalFilesDir("").toPath().resolve("dev.projectearth.prod.apk").toFile();
+        frameworkDir = InstallerStepsActivity.getAppContext().getExternalCacheDir().toPath().resolve("framework").toString();
+        aaptExec = InstallerStepsActivity.getAppContext().getFilesDir().toPath().resolve("aapt").toFile();
+        earthKeystore = InstallerStepsActivity.getAppContext().getFilesDir().toPath().resolve("earth_test.jks").toFile();
 
 
         // Get the earth apk
-        final PackageManager pm = MainStepActivity.getAppContext().getPackageManager();
+        final PackageManager pm = InstallerStepsActivity.getAppContext().getPackageManager();
         List<ApplicationInfo> packages =  pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
         String foundEarthApk = null;
@@ -62,7 +60,7 @@ public class StorageLocations {
         // Extract aapt
         // aapt from https://github.com/JonForShort/android-tools
         if(!aaptExec.exists()) {
-            try (InputStream in = MainStepActivity.getAppContext().getResources().openRawResource(R.raw.aapt);
+            try (InputStream in = InstallerStepsActivity.getAppContext().getResources().openRawResource(R.raw.aapt);
                  OutputStream out = new FileOutputStream(aaptExec)) {
                 byte[] buffer = new byte[1024];
                 int len;
@@ -78,7 +76,7 @@ public class StorageLocations {
 
         // Extract keystore
         if(!earthKeystore.exists()) {
-            try (InputStream in = MainStepActivity.getAppContext().getResources().openRawResource(R.raw.earth_test);
+            try (InputStream in = InstallerStepsActivity.getAppContext().getResources().openRawResource(R.raw.earth_test);
                  OutputStream out = new FileOutputStream(earthKeystore)) {
                 byte[] buffer = new byte[1024];
                 int len;

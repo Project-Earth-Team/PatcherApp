@@ -1,42 +1,27 @@
 package dev.projectearth.patcher;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import dev.projectearth.patcher.steps.ApkDecompile;
 import dev.projectearth.patcher.steps.ApkRecompile;
 import dev.projectearth.patcher.steps.ApkSign;
 import dev.projectearth.patcher.steps.DownloadPatches;
 import dev.projectearth.patcher.steps.PatchApp;
-import dev.projectearth.patcher.utils.AndroidUtils;
-import dev.projectearth.patcher.utils.LoggedRunnable;
+import dev.projectearth.patcher.utils.LogStep;
 import dev.projectearth.patcher.utils.StorageLocations;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 import lombok.Getter;
-import lombok.SneakyThrows;
 
-public class MainStepActivity extends AppCompatActivity implements StepperFormListener {
+public class InstallerStepsActivity extends AppCompatActivity implements StepperFormListener {
     @Getter
     private static Context appContext;
 
@@ -51,7 +36,7 @@ public class MainStepActivity extends AppCompatActivity implements StepperFormLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_step_test);
+        setContentView(R.layout.activity_installer_steps);
 
         appContext = getApplicationContext();
 
@@ -94,6 +79,7 @@ public class MainStepActivity extends AppCompatActivity implements StepperFormLi
     public void onCancelledForm() {
         // TODO: Popup
         // See https://github.com/ernestoyaquello/VerticalStepperForm/blob/master/app/src/main/java/verticalstepperform/ernestoyaquello/com/verticalstepperform/NewAlarmFormFragment.java
+        showConfirmDialog();
     }
 
     @Override
@@ -125,5 +111,29 @@ public class MainStepActivity extends AppCompatActivity implements StepperFormLi
 
         // IMPORTANT: The call to the super method must be here at the end.
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            showConfirmDialog();
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        showConfirmDialog();
+    }
+
+    private void showConfirmDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Cancel")
+                .setMessage("Do you really want to cancel?")
+                .setIcon(R.drawable.ic_error)
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {this.finish();})
+                .setNegativeButton(android.R.string.no, null).show();
     }
 }

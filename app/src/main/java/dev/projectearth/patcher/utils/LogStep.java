@@ -1,4 +1,4 @@
-package dev.projectearth.patcher;
+package dev.projectearth.patcher.utils;
 
 import android.os.AsyncTask;
 import android.view.Gravity;
@@ -7,12 +7,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
-import dev.projectearth.patcher.utils.AndroidUtils;
-import dev.projectearth.patcher.utils.EventListeners;
-import dev.projectearth.patcher.utils.LoggedRunnable;
+import dev.projectearth.patcher.R;
 import ernestoyaquello.com.verticalstepperform.Step;
-import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
-import lombok.Setter;
 
 public class LogStep extends Step<String> {
 
