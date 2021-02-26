@@ -20,8 +20,6 @@ import android.widget.EditText;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.PatchApplyException;
-import org.eclipse.jgit.api.errors.PatchFormatException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,6 +46,7 @@ import brut.androlib.ApkDecoder;
 import brut.androlib.ApkOptions;
 import brut.common.BrutException;
 import brut.directory.DirectoryException;
+import dev.projectearth.patcher.utils.AndroidUtils;
 import kellinwood.security.zipsigner.ZipSigner;
 import kellinwood.security.zipsigner.optional.KeyStoreFileManager;
 

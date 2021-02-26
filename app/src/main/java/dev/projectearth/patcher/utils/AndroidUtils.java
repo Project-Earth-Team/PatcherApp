@@ -1,17 +1,17 @@
-package dev.projectearth.patcher;
+package dev.projectearth.patcher.utils;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -77,5 +77,35 @@ public class AndroidUtils {
         } catch(IOException e) {
             return; // swallow a 404
         }
+    }
+
+    /**
+     * Gets a stacktrace and returns it as a string
+     *
+     * @param e {@link Throwable} to get the stacktrace for
+     * @return The {@link String} of the stacktrace
+     */
+    public static String getStackTrace(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
+    }
+
+    /**
+     * Set the value of a final static variable and flag it as not final
+     *
+     * @param field {@link Field} to alter
+     * @param newValue The value to set the field to
+     * @throws Exception
+     */
+    public static void setFinalStatic(Field field, Object newValue) throws Exception {
+        field.setAccessible(true);
+
+        Field modifiersField = Field.class.getDeclaredField("accessFlags");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+        field.set(null, newValue);
     }
 }
