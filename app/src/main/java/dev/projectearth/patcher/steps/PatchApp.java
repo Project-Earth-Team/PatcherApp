@@ -1,14 +1,9 @@
 package dev.projectearth.patcher.steps;
 
-import android.util.Log;
-
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import dev.projectearth.patcher.utils.LoggedRunnable;

@@ -3,10 +3,8 @@ package dev.projectearth.patcher.steps;
 import java.io.IOException;
 
 import brut.androlib.Androlib;
-import brut.androlib.AndrolibException;
 import brut.androlib.ApkDecoder;
 import brut.androlib.res.AndrolibResources;
-import brut.directory.DirectoryException;
 import dev.projectearth.patcher.utils.AndroidUtils;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;

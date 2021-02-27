@@ -13,7 +13,7 @@ import ernestoyaquello.com.verticalstepperform.Step;
 public class LogStep extends Step<String> {
 
     private TextView logView;
-    private LoggedRunnable action;
+    private final LoggedRunnable action;
     private LoggedAsyncRunnable asyncRunnable;
 
     public LogStep(String stepTitle, LoggedRunnable action) {
@@ -83,8 +83,8 @@ public class LogStep extends Step<String> {
     }
 
     private static class LoggedAsyncRunnable extends AsyncTask<Void, String, Boolean> {
-        private LoggedRunnable loggedRunnable;
-        private LogStep logStep;
+        private final LoggedRunnable loggedRunnable;
+        private final LogStep logStep;
 
         public LoggedAsyncRunnable(LoggedRunnable loggedRunnable, LogStep logStep) {
             super();

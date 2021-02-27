@@ -1,7 +1,5 @@
 package dev.projectearth.patcher.steps;
 
-import android.util.Log;
-
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.PrivateKey;

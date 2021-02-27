@@ -74,9 +74,7 @@ public class AndroidUtils {
         try (Response response = HTTP_CLIENT.newCall(request).execute();
              FileOutputStream fos = new FileOutputStream(outputFile)) {
             fos.write(response.body().bytes());
-        } catch(IOException e) {
-            return; // swallow a 404
-        }
+        } catch(IOException ignored) { }
     }
 
     /**
@@ -99,6 +97,7 @@ public class AndroidUtils {
      * @param newValue The value to set the field to
      * @throws Exception
      */
+    @SuppressWarnings("JavaReflectionMemberAccess")
     public static void setFinalStatic(Field field, Object newValue) throws Exception {
         field.setAccessible(true);
 

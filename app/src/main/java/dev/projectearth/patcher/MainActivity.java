@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             PackageInfo earthInfo = getPackageManager().getPackageInfo("dev.projectearth.prod", 0);
             txtPJEDesc.setText("Version: " + earthInfo.versionName + " (" + earthInfo.versionCode + ")");
             imgPJEIcon.setImageDrawable(earthInfo.applicationInfo.loadIcon(getPackageManager()));
-        } catch (PackageManager.NameNotFoundException e) { }
+        } catch (PackageManager.NameNotFoundException ignored) { }
 
         btnPatch.setOnClickListener(v -> {
             Intent intent = new Intent(this, InstallerStepsActivity.class);

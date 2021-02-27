@@ -1,11 +1,12 @@
 package dev.projectearth.patcher;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -31,8 +32,6 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
     private LogStep logStep4;
     private LogStep logStep5;
 
-    private VerticalStepperFormView verticalStepperForm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +50,7 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
         logStep5 = new LogStep("Sign", new ApkSign());
 
         // Find the form view, set it up and initialize it.
-        verticalStepperForm = findViewById(R.id.stepper_form);
+        VerticalStepperFormView verticalStepperForm = findViewById(R.id.stepper_form);
         verticalStepperForm
                 .setup(this, logStep1, logStep2, logStep3, logStep4, logStep5)
                 .displayStepButtons(false)
@@ -70,14 +69,23 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
         intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", StorageLocations.getOutFileSigned()), "application/vnd.android.package-archive");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
 
-        this.finish();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                this.finish();
+            }
+        }
     }
 
     @Override
     public void onCancelledForm() {
-        this.finish();
+        showConfirmDialog();
     }
 
     @Override
@@ -85,8 +93,9 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
         savedInstanceState.putString("log1", logStep1.getStepData());
         savedInstanceState.putString("log2", logStep2.getStepData());
         savedInstanceState.putString("log3", logStep3.getStepData());
+        savedInstanceState.putString("log4", logStep4.getStepData());
+        savedInstanceState.putString("log5", logStep5.getStepData());
 
-        // IMPORTANT: The call to the super method must be here at the end.
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -105,6 +114,16 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
         if(savedInstanceState.containsKey("log3")) {
             String log3 = savedInstanceState.getString("log3");
             logStep3.restoreStepData(log3);
+        }
+
+        if(savedInstanceState.containsKey("log4")) {
+            String log4 = savedInstanceState.getString("log4");
+            logStep4.restoreStepData(log4);
+        }
+
+        if(savedInstanceState.containsKey("log5")) {
+            String log5 = savedInstanceState.getString("log5");
+            logStep5.restoreStepData(log5);
         }
 
         // IMPORTANT: The call to the super method must be here at the end.
@@ -131,7 +150,7 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
                 .setTitle("Cancel")
                 .setMessage("Do you really want to cancel?")
                 .setIcon(R.drawable.ic_error)
-                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {this.finish();})
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> this.finish())
                 .setNegativeButton(android.R.string.no, null).show();
     }
 }

@@ -1,14 +1,7 @@
 package dev.projectearth.patcher.steps;
 
-import android.util.Log;
-
-import java.io.IOException;
-
 import brut.androlib.Androlib;
-import brut.androlib.ApkDecoder;
 import brut.androlib.ApkOptions;
-import brut.androlib.res.AndrolibResources;
-import brut.common.BrutException;
 import dev.projectearth.patcher.utils.AndroidUtils;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;

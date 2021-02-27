@@ -1,5 +1,7 @@
 package dev.projectearth.patcher.utils;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import java.util.logging.Logger;
@@ -17,6 +19,21 @@ public class UILogger extends Logger {
     @Override
     public void info(@Nullable String msg) {
         logEventListener.onLogLine(msg);
+        Log.i(getName(), msg);
         super.info(msg);
+    }
+
+    @Override
+    public void warning(@Nullable String msg) {
+        logEventListener.onLogLine(msg);
+        Log.w(getName(), msg);
+        super.warning(msg);
+    }
+
+    @Override
+    public void fine(@Nullable String msg) {
+        logEventListener.onLogLine(msg);
+        Log.i(getName(), msg);
+        super.fine(msg);
     }
 }

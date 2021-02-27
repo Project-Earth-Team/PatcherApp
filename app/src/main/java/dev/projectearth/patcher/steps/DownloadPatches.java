@@ -26,7 +26,7 @@ public class DownloadPatches extends LoggedRunnable {
         // Empty the dir
         if (StorageLocations.getPatchDir().toFile().exists()) {
             logEventListener.onLogLine("Removing existing patches...");
-            for (final String file :  StorageLocations.getPatchDir().toFile().list()) {
+            for (final String file : StorageLocations.getPatchDir().toFile().list()) {
                 StorageLocations.getPatchDir().resolve(file).toFile().delete();
             }
         } else {
