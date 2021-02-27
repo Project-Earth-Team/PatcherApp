@@ -3,11 +3,16 @@ package dev.projectearth.patcher;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,9 +21,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //PackageInfo earthInfo = getPackageManager().getPackageInfo("com.mojang.minecraftearth", 0);
+        TextView txtMCETitle = findViewById(R.id.txtMCETitle);
+        TextView txtMCEDesc = findViewById(R.id.txtMCEDesc);
+        ImageView imgMCEIcon = findViewById(R.id.imgMCEIcon);
+
+        TextView txtPJETitle = findViewById(R.id.txtPJETitle);
+        TextView txtPJEDesc = findViewById(R.id.txtPJEDesc);
+        ImageView imgPJEIcon = findViewById(R.id.imgPJEIcon);
 
         Button btnPatch = findViewById(R.id.btnPatch);
+
+        txtMCETitle.setPaintFlags(txtMCETitle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        txtPJETitle.setPaintFlags(txtPJETitle.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        // Get Minecraft Earth
+        try {
+            PackageInfo earthInfo = getPackageManager().getPackageInfo("com.mojang.minecraftearth", 0);
+            txtMCEDesc.setText("Version: " + earthInfo.versionName + " (" + earthInfo.versionCode + ")\n");
+
+            // TODO: Check apk hash here? In case of prior modification
+            boolean patchable = false;
+            if (earthInfo.versionCode == 2020121703) {
+                patchable = true;
+            }
+            btnPatch.setEnabled(patchable);
+            txtMCEDesc.append("Can be patched: " + patchable);
+
+            imgMCEIcon.setImageDrawable(earthInfo.applicationInfo.loadIcon(getPackageManager()));
+        } catch (PackageManager.NameNotFoundException e) {
+            btnPatch.setEnabled(false);
+        }
+
+        // Get Project Earth
+        try {
+            PackageInfo earthInfo = getPackageManager().getPackageInfo("dev.projectearth.prod", 0);
+            txtPJEDesc.setText("Version: " + earthInfo.versionName + " (" + earthInfo.versionCode + ")");
+            imgPJEIcon.setImageDrawable(earthInfo.applicationInfo.loadIcon(getPackageManager()));
+        } catch (PackageManager.NameNotFoundException e) { }
+
         btnPatch.setOnClickListener(v -> {
             Intent intent = new Intent(this, InstallerStepsActivity.class);
             startActivity(intent);

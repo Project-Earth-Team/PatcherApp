@@ -61,25 +61,23 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
                 .displayBottomNavigation(false)
                 .allowStepOpeningOnHeaderClick(false)
                 .displayStepDataInSubtitleOfClosedSteps(false)
-                .allowNonLinearNavigation(true)
                 .init();
     }
 
     @Override
     public void onCompletedForm() {
-        // TODO: Install
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", StorageLocations.getOutFileSigned()), "application/vnd.android.package-archive");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(intent);
+
+        this.finish();
     }
 
     @Override
     public void onCancelledForm() {
-        // TODO: Popup
-        // See https://github.com/ernestoyaquello/VerticalStepperForm/blob/master/app/src/main/java/verticalstepperform/ernestoyaquello/com/verticalstepperform/NewAlarmFormFragment.java
-        showConfirmDialog();
+        this.finish();
     }
 
     @Override

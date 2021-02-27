@@ -14,5 +14,79 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPJEDesc" />
+
+    <!-- Minecraft Earth -->
+    <TextView
+        android:id="@+id/txtMCETitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="Minecraft Earth"
+        app:layout_constraintEnd_toStartOf="@+id/imgMCEIcon"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtMCEDesc"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Not installed"
+        app:layout_constraintBottom_toBottomOf="@+id/imgMCEIcon"
+        app:layout_constraintEnd_toStartOf="@+id/imgMCEIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtMCETitle" />
+
+    <ImageView
+        android:id="@+id/imgMCEIcon"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_question" />
+
+    <!-- Project Earth -->
+    <TextView
+        android:id="@+id/txtPJETitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:text="Project Earth"
+        app:layout_constraintEnd_toStartOf="@+id/imgPJEIcon"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtMCEDesc" />
+
+    <TextView
+        android:id="@+id/txtPJEDesc"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Not installed"
+        app:layout_constraintBottom_toBottomOf="@+id/imgPJEIcon"
+        app:layout_constraintEnd_toStartOf="@+id/imgMCEIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPJETitle" />
+
+    <ImageView
+        android:id="@+id/imgPJEIcon"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgMCEIcon"
+        app:srcCompat="@drawable/ic_question" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
