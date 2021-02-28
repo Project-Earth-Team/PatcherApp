@@ -11,9 +11,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".AboutActivity"
-            android:label="@string/activity_about_title"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +24,10 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/activity_settings_title" />
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/activity_about_title"
+            android:theme="@style/AppTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

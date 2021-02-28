@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Project Earth: Patcher</string>
 
-    <string name="activity_main_version">Version: %s (%i)</string>
+    <string name="activity_main_version">Version: %s (%d)</string>
     <string name="activity_main_patchable">Can be patched: %s</string>
 
     <string name="activity_installer_title">Installer</string>
