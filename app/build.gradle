@@ -70,7 +70,9 @@ dependencies {
     implementation 'com.github.kellinwood.zip-signer:zipsigner-lib-optional:2bb3b69ff3'
     implementation 'com.github.kellinwood.zip-signer:android-sun-jarsign-support:2bb3b69ff3' // May not be needed
     //implementation 'org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r'
-    implementation 'com.github.nadavc.jgit-binary-patch:org.eclipse.jgit:07e7f95b7d' // Using this fork fixes binary patch application
+    //implementation 'com.github.nadavc.jgit-binary-patch:org.eclipse.jgit:07e7f95b7d' // Using this fork fixes binary patch application
+    implementation 'com.github.rtm516.jgit:org.eclipse.jgit:61810ad68a' // Up-to date version of the above
+
 
     // Http requests
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
