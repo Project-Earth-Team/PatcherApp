@@ -5,6 +5,8 @@ import java.io.IOException;
 import brut.androlib.Androlib;
 import brut.androlib.ApkDecoder;
 import brut.androlib.res.AndrolibResources;
+import dev.projectearth.patcher.MainActivity;
+import dev.projectearth.patcher.R;
 import dev.projectearth.patcher.utils.AndroidUtils;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;
@@ -31,7 +33,7 @@ public class ApkDecompile extends LoggedRunnable {
             decoder.setForceDelete(true);
             decoder.setFrameworkDir(StorageLocations.getFrameworkDir());
             decoder.decode();
-            logEventListener.onLogLine("Done!");
+            logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_done));
         } finally {
             try {
                 decoder.close();

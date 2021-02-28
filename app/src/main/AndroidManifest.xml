@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".AboutActivity"
-            android:label="@string/title_activity_about"></activity>
+            android:label="@string/activity_about_title"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,10 +23,10 @@
         </activity>
         <activity
             android:name=".InstallerStepsActivity"
-            android:label="@string/title_activity_installer" />
+            android:label="@string/activity_installer_title" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/activity_settings_title" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

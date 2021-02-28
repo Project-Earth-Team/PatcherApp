@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
+import dev.projectearth.patcher.MainActivity;
 import dev.projectearth.patcher.R;
 import ernestoyaquello.com.verticalstepperform.Step;
 
@@ -115,7 +116,7 @@ public class LogStep extends Step<String> {
         protected void onPostExecute(Boolean success) {
             super.onPostExecute(success);
             if (!success) {
-                this.logStep.markAsUncompleted("Failed", true);
+                this.logStep.markAsUncompleted(MainActivity.getAppContext().getResources().getString(R.string.step_failed), true);
             } else {
                 this.logStep.getFormView().goToNextStep(true);
             }

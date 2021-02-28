@@ -5,7 +5,7 @@
 
         <Preference
             app:key="version"
-            app:title="Version"
+            app:title="@string/about_about_version"
             app:summary="" />
 
     </PreferenceCategory>
@@ -14,22 +14,22 @@
 
         <Preference
             app:key="github"
-            app:title="GitHub repo"
-            app:summary="Source code of the app" />
+            app:title="@string/about_links_github_title"
+            app:summary="@string/about_links_github_desc" />
 
         <Preference
             app:key="website"
-            app:title="Website"
-            app:summary="Homepage of the project" />
+            app:title="@string/about_links_website_title"
+            app:summary="@string/about_links_website_desc" />
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/about_credits_title">
 
         <Preference
-            app:key="earth"
-            app:title="Project Earth Team"
-            app:summary="Development of the App" />
+            app:key="project"
+            app:title="@string/about_credits_project_title"
+            app:summary="@string/about_credits_project_desc" />
 
     </PreferenceCategory>
 

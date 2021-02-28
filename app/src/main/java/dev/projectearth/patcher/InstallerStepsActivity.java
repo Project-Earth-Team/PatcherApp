@@ -23,8 +23,6 @@ import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
 import lombok.Getter;
 
 public class InstallerStepsActivity extends AppCompatActivity implements StepperFormListener {
-    @Getter
-    private static Context appContext;
 
     private LogStep logStep1;
     private LogStep logStep2;
@@ -37,17 +35,15 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_installer_steps);
 
-        appContext = getApplicationContext();
-
         // Fix for OSDetection in apktool
         System.setProperty("sun.arch.data.model", (System.getProperty("os.arch").contains("64") ? "64" : "32"));
 
         // Create the steps.
-        logStep1 = new LogStep("Download patches", new DownloadPatches());
-        logStep2 = new LogStep("Decompile", new ApkDecompile());
-        logStep3 = new LogStep("Patch", new PatchApp());
-        logStep4 = new LogStep("Recompile", new ApkRecompile());
-        logStep5 = new LogStep("Sign", new ApkSign());
+        logStep1 = new LogStep(getString(R.string.step_download_title), new DownloadPatches());
+        logStep2 = new LogStep(getString(R.string.step_decompile_title), new ApkDecompile());
+        logStep3 = new LogStep(getString(R.string.step_patch_title), new PatchApp());
+        logStep4 = new LogStep(getString(R.string.step_recompile_title), new ApkRecompile());
+        logStep5 = new LogStep(getString(R.string.step_sign_title), new ApkSign());
 
         // Find the form view, set it up and initialize it.
         VerticalStepperFormView verticalStepperForm = findViewById(R.id.stepper_form);
@@ -56,7 +52,7 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
                 .displayStepButtons(false)
                 //.displayCancelButtonInLastStep(false)
                 .displayCancelButtonInLastStep(true)
-                .lastStepNextButtonText("Install")
+                .lastStepNextButtonText(getString(R.string.activity_installer_install))
                 .displayBottomNavigation(false)
                 .allowStepOpeningOnHeaderClick(false)
                 .displayStepDataInSubtitleOfClosedSteps(false)
@@ -147,8 +143,8 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
 
     private void showConfirmDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Cancel")
-                .setMessage("Do you really want to cancel?")
+                .setTitle(R.string.activity_installer_cancel_title)
+                .setMessage(R.string.activity_installer_cancel_message)
                 .setIcon(R.drawable.ic_error)
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> super.onBackPressed())
                 .setNegativeButton(android.R.string.no, null).show();

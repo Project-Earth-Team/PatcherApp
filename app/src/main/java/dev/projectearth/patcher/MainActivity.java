@@ -3,6 +3,7 @@ package dev.projectearth.patcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,12 +16,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import lombok.Getter;
+
 public class MainActivity extends AppCompatActivity {
+    @Getter
+    private static Context appContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        appContext = getApplicationContext();
 
         // Set default preferences
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
@@ -41,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         // Get Minecraft Earth
         try {
             PackageInfo earthInfo = getPackageManager().getPackageInfo("com.mojang.minecraftearth", 0);
-            txtMCEDesc.setText("Version: " + earthInfo.versionName + " (" + earthInfo.versionCode + ")\n");
+            txtMCEDesc.setText(getString(R.string.activity_main_version, earthInfo.versionName, earthInfo.versionCode));
+            txtMCEDesc.append("\n");
 
             // TODO: Check apk hash here? In case of prior modification
             boolean patchable = false;
@@ -49,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 patchable = true;
             }
             btnPatch.setEnabled(patchable);
-            txtMCEDesc.append("Can be patched: " + patchable);
+            txtMCEDesc.append(getString(R.string.activity_main_patchable, Boolean.toString(patchable)));
 
             imgMCEIcon.setImageDrawable(earthInfo.applicationInfo.loadIcon(getPackageManager()));
         } catch (PackageManager.NameNotFoundException e) {
@@ -59,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         // Get Project Earth
         try {
             PackageInfo earthInfo = getPackageManager().getPackageInfo("dev.projectearth.prod", 0);
-            txtPJEDesc.setText("Version: " + earthInfo.versionName + " (" + earthInfo.versionCode + ")");
+            txtMCEDesc.setText(getString(R.string.activity_main_version, earthInfo.versionName, earthInfo.versionCode));
             imgPJEIcon.setImageDrawable(earthInfo.applicationInfo.loadIcon(getPackageManager()));
         } catch (PackageManager.NameNotFoundException ignored) { }
 

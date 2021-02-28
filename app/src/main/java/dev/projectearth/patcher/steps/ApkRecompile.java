@@ -2,6 +2,8 @@ package dev.projectearth.patcher.steps;
 
 import brut.androlib.Androlib;
 import brut.androlib.ApkOptions;
+import dev.projectearth.patcher.MainActivity;
+import dev.projectearth.patcher.R;
 import dev.projectearth.patcher.utils.AndroidUtils;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;
@@ -22,6 +24,6 @@ public class ApkRecompile extends LoggedRunnable {
         apkOptions.aaptPath = StorageLocations.getAaptExec().getAbsolutePath();
 
         new Androlib(apkOptions).build(StorageLocations.getOutDir().toFile(), StorageLocations.getOutFile());
-        logEventListener.onLogLine("Done!");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_done));
     }
 }

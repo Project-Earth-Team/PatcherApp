@@ -6,6 +6,8 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
+import dev.projectearth.patcher.MainActivity;
+import dev.projectearth.patcher.R;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;
 import kellinwood.security.zipsigner.ZipSigner;
@@ -16,7 +18,7 @@ public class ApkSign extends LoggedRunnable {
     @SneakyThrows
     @Override
     public void run() {
-        logEventListener.onLogLine("Setting up...");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_sign_setup));
         KeyStore keystore = KeyStoreFileManager.loadKeyStore(StorageLocations.getEarthKeystore().getPath(), "earth_test".toCharArray());
 
         // TODO: Setup a proper key
@@ -28,8 +30,8 @@ public class ApkSign extends LoggedRunnable {
 
         zipSigner.setKeys( "earth_test", publicKey, privateKey, "SHA1withRSA", null);
 
-        logEventListener.onLogLine("Signing...");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_sign_signing));
         zipSigner.signZip(StorageLocations.getOutFile().toString(), StorageLocations.getOutFileSigned().toString());
-        logEventListener.onLogLine("Done!");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_done));
     }
 }

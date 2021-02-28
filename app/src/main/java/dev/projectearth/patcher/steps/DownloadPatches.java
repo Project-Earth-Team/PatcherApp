@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import dev.projectearth.patcher.MainActivity;
+import dev.projectearth.patcher.R;
 import dev.projectearth.patcher.utils.AndroidUtils;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;
@@ -25,7 +27,7 @@ public class DownloadPatches extends LoggedRunnable {
 
         // Empty the dir
         if (StorageLocations.getPatchDir().toFile().exists()) {
-            logEventListener.onLogLine("Removing existing patches...");
+            logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_download_removing));
             for (final String file : StorageLocations.getPatchDir().toFile().list()) {
                 StorageLocations.getPatchDir().resolve(file).toFile().delete();
             }
@@ -34,10 +36,10 @@ public class DownloadPatches extends LoggedRunnable {
         }
 
         // Always download the latest patches
-        logEventListener.onLogLine("Downloading latest...");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_download_downloading));
         AndroidUtils.downloadFile("https://github.com/Project-Earth-Team/Patches/archive/main.zip", zipFile);
 
-        logEventListener.onLogLine("Extracting...");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_download_extract));
         try (ZipInputStream zip = new ZipInputStream(new FileInputStream(zipFile))) {
             ZipEntry entry;
             while ((entry = zip.getNextEntry()) != null) {
@@ -46,7 +48,7 @@ public class DownloadPatches extends LoggedRunnable {
                 }
                 Path fileName = Paths.get(entry.getName()).getFileName();
 
-                logEventListener.onLogLine("Found patch: " + fileName);
+                logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_download_found, fileName));
 
                 FileOutputStream fOut = new FileOutputStream(StorageLocations.getPatchDir().resolve(fileName).toString());
 
@@ -63,6 +65,6 @@ public class DownloadPatches extends LoggedRunnable {
         } catch (IOException e) {
             logEventListener.onLogLine(AndroidUtils.getStackTrace(e));
         }
-        logEventListener.onLogLine("Done!");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_done));
     }
 }

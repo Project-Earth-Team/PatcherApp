@@ -8,7 +8,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.RandomAccessFile;
 
-import dev.projectearth.patcher.InstallerStepsActivity;
+import dev.projectearth.patcher.MainActivity;
+import dev.projectearth.patcher.R;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;
 import lombok.SneakyThrows;
@@ -17,9 +18,9 @@ public class PatchApp extends LoggedRunnable {
     @SneakyThrows
     @Override
     public void run() {
-        String serverAddress = PreferenceManager.getDefaultSharedPreferences(InstallerStepsActivity.getAppContext()).getString("locator_server", "https://p.projectearth.dev");
+        String serverAddress = PreferenceManager.getDefaultSharedPreferences(MainActivity.getAppContext()).getString("locator_server", "https://p.projectearth.dev");
 
-        logEventListener.onLogLine("Patching server address...");
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_patch_server));
         try (RandomAccessFile raf = new RandomAccessFile(StorageLocations.getOutDir().resolve("lib/arm64-v8a/libgenoa.so").toString(), "rw")) {
             raf.seek(0x0514D05D);
             raf.write(serverAddress.getBytes());
@@ -31,11 +32,11 @@ public class PatchApp extends LoggedRunnable {
                     continue;
                 }
 
-                logEventListener.onLogLine("Installing: " + file.getName());
+                logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_patch_install, file.getName()));
 
                 git.apply().setPatch(new FileInputStream(file)).call();
             }
-            logEventListener.onLogLine("Done!");
+            logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_done));
         }
     }
 }
