@@ -1,11 +1,14 @@
 package dev.projectearth.patcher.steps;
 
+import androidx.preference.PreferenceManager;
+
 import org.eclipse.jgit.api.Git;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.RandomAccessFile;
 
+import dev.projectearth.patcher.InstallerStepsActivity;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;
 import lombok.SneakyThrows;
@@ -14,7 +17,7 @@ public class PatchApp extends LoggedRunnable {
     @SneakyThrows
     @Override
     public void run() {
-        String serverAddress = "http://192.168.1.115";
+        String serverAddress = PreferenceManager.getDefaultSharedPreferences(InstallerStepsActivity.getAppContext()).getString("locator_server", "https://p.projectearth.dev");
 
         logEventListener.onLogLine("Patching server address...");
         try (RandomAccessFile raf = new RandomAccessFile(StorageLocations.getOutDir().resolve("lib/arm64-v8a/libgenoa.so").toString(), "rw")) {

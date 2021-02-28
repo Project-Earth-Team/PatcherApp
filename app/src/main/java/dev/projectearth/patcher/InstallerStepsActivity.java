@@ -78,7 +78,7 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                this.finish();
+                super.onBackPressed();
             }
         }
     }
@@ -150,7 +150,7 @@ public class InstallerStepsActivity extends AppCompatActivity implements Stepper
                 .setTitle("Cancel")
                 .setMessage("Do you really want to cancel?")
                 .setIcon(R.drawable.ic_error)
-                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> this.finish())
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> super.onBackPressed())
                 .setNegativeButton(android.R.string.no, null).show();
     }
 }

@@ -1,6 +1,7 @@
 package dev.projectearth.patcher;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -20,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Set default preferences
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
 
         TextView txtMCETitle = findViewById(R.id.txtMCETitle);
         TextView txtMCEDesc = findViewById(R.id.txtMCEDesc);
@@ -77,10 +81,12 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.settings:
-                // TODO: Settings
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 return true;
             case R.id.about:
-                // TODO: About
+                Intent aboutIntent = new Intent(this, AboutActivity.class);
+                startActivity(aboutIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
