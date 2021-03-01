@@ -1,7 +1,5 @@
 package dev.projectearth.patcher.steps;
 
-import android.util.Log;
-
 import androidx.preference.PreferenceManager;
 
 import org.eclipse.jgit.api.Git;
@@ -20,12 +18,31 @@ import dev.projectearth.patcher.utils.StorageLocations;
 import lombok.SneakyThrows;
 
 public class PatchApp extends LoggedRunnable {
+    private static final int urlMax = 27;
+
     @SneakyThrows
     @Override
     public void run() {
+        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_patch_server));
         String serverAddress = PreferenceManager.getDefaultSharedPreferences(MainActivity.getAppContext()).getString("locator_server", "https://p.projectearth.dev");
 
-        logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_patch_server));
+        // Make sure we have http or https
+        if (!serverAddress.matches("^(http|https)://.*$")) {
+            serverAddress = "https://" + serverAddress;
+        }
+
+        // Remove trailing slash
+        if (serverAddress.endsWith("/")) {
+            serverAddress = serverAddress.substring(0, serverAddress.length() - 1);
+        }
+
+        // Check the url length
+        if (serverAddress.length() > urlMax) {
+            throw new IndexOutOfBoundsException("Server address too long (" + serverAddress.length() + ">" + urlMax + ")");
+        }
+
+        serverAddress = String.format("%1$-" + 27 + "s", serverAddress).replace(' ', '\0');
+
         try (RandomAccessFile raf = new RandomAccessFile(StorageLocations.getOutDir().resolve("lib/arm64-v8a/libgenoa.so").toString(), "rw")) {
             raf.seek(0x0514D05D);
             raf.write(serverAddress.getBytes());
