@@ -5,9 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -106,5 +113,67 @@ public class AndroidUtils {
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
         field.set(null, newValue);
+    }
+
+    /**
+     * TODO: This javadoc
+     * https://stackoverflow.com/a/9456947/5299903
+     * @param f
+     */
+    public static void normalizeFile(File f) {
+        File temp = null;
+        BufferedReader bufferIn = null;
+        BufferedWriter bufferOut = null;
+
+        try {
+            if (f.exists()) {
+                // Create a new temp file to write to
+                temp = new File(f.getAbsolutePath() + ".normalized");
+                temp.createNewFile();
+
+                // Get a stream to read from the file un-normalized file
+                FileInputStream fileIn = new FileInputStream(f);
+                DataInputStream dataIn = new DataInputStream(fileIn);
+                bufferIn = new BufferedReader(new InputStreamReader(dataIn));
+
+                // Get a stream to write to the normalized file
+                FileOutputStream fileOut = new FileOutputStream(temp);
+                DataOutputStream dataOut = new DataOutputStream(fileOut);
+                bufferOut = new BufferedWriter(new OutputStreamWriter(dataOut));
+
+                // For each line in the un-normalized file
+                String line;
+                while ((line = bufferIn.readLine()) != null) {
+                    // Write the original line plus the operating-system dependent newline
+                    bufferOut.write(line);
+                    bufferOut.write("\n");
+                }
+
+                bufferIn.close();
+                bufferOut.close();
+
+                // Remove the original file
+                f.delete();
+
+                // And rename the original file to the new one
+                temp.renameTo(f);
+            } else {
+                // If the file doesn't exist...
+                throw new IOException("Could not find file to open: " + f.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Clean up, temp should never exist
+            try {
+                temp.delete();
+            } catch (NullPointerException ignored) { }
+            try {
+                bufferIn.close();
+            } catch (NullPointerException | IOException ignored) { }
+            try {
+                bufferOut.close();
+            } catch (NullPointerException | IOException ignored) { }
+        }
     }
 }

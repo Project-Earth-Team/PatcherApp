@@ -1,8 +1,12 @@
 package dev.projectearth.patcher.steps;
 
+import android.util.Log;
+
 import androidx.preference.PreferenceManager;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.patch.FileHeader;
+import org.eclipse.jgit.patch.Patch;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +14,7 @@ import java.io.RandomAccessFile;
 
 import dev.projectearth.patcher.MainActivity;
 import dev.projectearth.patcher.R;
+import dev.projectearth.patcher.utils.AndroidUtils;
 import dev.projectearth.patcher.utils.LoggedRunnable;
 import dev.projectearth.patcher.utils.StorageLocations;
 import lombok.SneakyThrows;
@@ -33,6 +38,17 @@ public class PatchApp extends LoggedRunnable {
                 }
 
                 logEventListener.onLogLine(MainActivity.getAppContext().getResources().getString(R.string.step_patch_install, file.getName()));
+
+                // Semi hacky fix for line endings being mixed in source files
+                FileInputStream patchFile = new FileInputStream(file);
+                Patch p = new Patch();
+                p.parse(patchFile);
+                for (FileHeader fileHeader : p.getFiles()) {
+                    if (fileHeader.getPatchType() == FileHeader.PatchType.UNIFIED) {
+                        // Replace the line endings
+                        AndroidUtils.normalizeFile(StorageLocations.getOutDir().resolve(fileHeader.getOldPath()).toFile());
+                    }
+                }
 
                 git.apply().setPatch(new FileInputStream(file)).call();
             }
