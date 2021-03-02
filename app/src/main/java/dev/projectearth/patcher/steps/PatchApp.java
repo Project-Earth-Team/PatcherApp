@@ -41,7 +41,7 @@ public class PatchApp extends LoggedRunnable {
             throw new IndexOutOfBoundsException("Server address too long (" + serverAddress.length() + ">" + urlMax + ")");
         }
 
-        serverAddress = String.format("%1$-" + 27 + "s", serverAddress).replace(' ', '\0');
+        serverAddress = String.format("%1$-" + 27 + "s", serverAddress).replaceAll(" ", "\0");
 
         try (RandomAccessFile raf = new RandomAccessFile(StorageLocations.getOutDir().resolve("lib/arm64-v8a/libgenoa.so").toString(), "rw")) {
             raf.seek(0x0514D05D);
