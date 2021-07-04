@@ -9,6 +9,7 @@ import org.eclipse.jgit.patch.Patch;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.RandomAccessFile;
+import java.util.Arrays;
 
 import dev.projectearth.patcher.MainActivity;
 import dev.projectearth.patcher.R;
@@ -49,7 +50,15 @@ public class PatchApp extends LoggedRunnable {
         }
 
         try (Git git = Git.init().setDirectory(StorageLocations.getOutDir().toFile()).call()) {
-            for (final File file : StorageLocations.getPatchDir().toFile().listFiles()) {
+            File[] files = StorageLocations.getPatchDir().toFile().listFiles();
+
+            if (files == null) {
+                return;
+            }
+
+            Arrays.sort(files); // Fix patch ordering on some devices
+
+            for (final File file : files) {
                 if (!file.getName().endsWith(".patch")) {
                     continue;
                 }
