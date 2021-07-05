@@ -1,7 +1,6 @@
 package dev.projectearth.patcher;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,7 +20,6 @@ import dev.projectearth.patcher.utils.LogStep;
 import dev.projectearth.patcher.utils.StorageLocations;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormView;
 import ernestoyaquello.com.verticalstepperform.listener.StepperFormListener;
-import lombok.Getter;
 
 public class InstallerStepsActivity extends AppCompatActivity implements StepperFormListener {
 
