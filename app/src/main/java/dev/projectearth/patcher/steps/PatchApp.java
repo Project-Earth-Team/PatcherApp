@@ -45,8 +45,13 @@ public class PatchApp extends LoggedRunnable {
         serverAddress = String.format("%1$-" + 27 + "s", serverAddress).replaceAll(" ", "\0");
 
         try (RandomAccessFile raf = new RandomAccessFile(StorageLocations.getOutDir().resolve("lib/arm64-v8a/libgenoa.so").toString(), "rw")) {
+            // Write server address
             raf.seek(0x0514D05D);
             raf.write(serverAddress.getBytes());
+
+            // Patch sunset check for 0.33.0
+            raf.seek(0x22A6DC8);
+            raf.write(0x540005CB); // asm: b.ge -> b.lt
         }
 
         try (Git git = Git.init().setDirectory(StorageLocations.getOutDir().toFile()).call()) {
